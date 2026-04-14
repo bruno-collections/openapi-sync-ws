@@ -1,0 +1,28 @@
+opencollection: 1.0.0
+
+info:
+  name: Orders API
+config:
+  proxy:
+    inherit: true
+    config:
+      protocol: http
+      hostname: ""
+      port: ""
+      auth:
+        username: ""
+        password: ""
+      bypassProxy: ""
+bundled: false
+extensions:
+  bruno:
+    ignore:
+      - node_modules
+      - .git
+    openapi:
+      - sourceUrl: ../../../../Movies/openapi sync/orders-api-v1.yaml
+        groupBy: tags
+        lastSyncDate: 2026-04-14T14:43:02.558Z
+        specHash: a98fa4df9135f83a461ad4c788697aa3
+        autoCheck: true
+        autoCheckInterval: 5
