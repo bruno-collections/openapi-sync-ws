@@ -20,7 +20,7 @@ extensions:
       - node_modules
       - .git
     openapi:
-      - sourceUrl: ../../../../Movies/openapi sync/orders-api-v1.yaml
+      - sourceUrl: https://raw.githubusercontent.com/anthonyd-bruno/openapi-sync-ws/refs/heads/main/orders-api-v1.yaml
         groupBy: tags
         lastSyncDate: 2026-04-14T14:43:02.558Z
         specHash: a98fa4df9135f83a461ad4c788697aa3
