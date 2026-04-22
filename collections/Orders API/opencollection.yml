@@ -22,7 +22,7 @@ extensions:
     openapi:
       - sourceUrl: https://raw.githubusercontent.com/bruno-collections/openapi-sync-ws/refs/heads/main/orders-api-v1.yaml
         groupBy: tags
-        lastSyncDate: 2026-04-14T14:43:02.558Z
+        lastSyncDate: 2026-04-22T21:21:23.145Z
         specHash: a98fa4df9135f83a461ad4c788697aa3
         autoCheck: true
         autoCheckInterval: 5
