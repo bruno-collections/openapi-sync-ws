@@ -1,15 +1,13 @@
 openapi: 3.0.3
 info:
   title: Orders API
-  version: 1.1.0
+  version: 1.0.0
   description: |
     Demo API spec for showcasing Bruno OpenAPI Sync.
 
-    This updated version intentionally includes changes that Bruno can detect:
-    - a new endpoint for cancelling an order
-    - a new `priority` field in request and response bodies
-    - an updated `status` filter with `on_hold`
-    - a new `include` query parameter on GET /orders/{orderId}
+    This initial version is designed to be imported first. A second version of
+    the spec is provided separately to demonstrate sync updates such as new
+    endpoints, request body changes, and parameter updates.
 servers:
   - url: https://api.demo.local/v1
     description: Demo server
@@ -37,7 +35,7 @@ paths:
                   value:
                     status: ok
                     service: orders-api
-                    timestamp: '2026-04-14T14:35:00Z'
+                    timestamp: '2026-04-14T14:30:00Z'
 
   /orders:
     get:
@@ -51,7 +49,7 @@ paths:
           required: false
           schema:
             type: string
-            enum: [pending, confirmed, on_hold, shipped, delivered, cancelled]
+            enum: [pending, confirmed, shipped, delivered, cancelled]
         - in: query
           name: page
           required: false
@@ -85,10 +83,9 @@ paths:
             schema:
               $ref: '#/components/schemas/OrderCreateRequest'
             examples:
-              priorityOrder:
+              basicOrder:
                 value:
                   customerId: cust_1001
-                  priority: high
                   items:
                     - sku: sku_espresso_beans
                       quantity: 2
@@ -118,13 +115,6 @@ paths:
       operationId: getOrderById
       parameters:
         - $ref: '#/components/parameters/OrderId'
-        - in: query
-          name: include
-          required: false
-          description: Optionally include related resources in the response
-          schema:
-            type: string
-            enum: [timeline, shipment]
       responses:
         '200':
           description: Order details
@@ -165,38 +155,6 @@ paths:
                 $ref: '#/components/schemas/Error'
         '404':
           description: Order not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-  /orders/{orderId}/cancel:
-    post:
-      tags: [Orders]
-      summary: Cancel an order
-      operationId: cancelOrder
-      parameters:
-        - $ref: '#/components/parameters/OrderId'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CancelOrderRequest'
-            examples:
-              customerRequested:
-                value:
-                  reason: customer_requested
-                  comment: Customer asked to cancel within 10 minutes of placing the order.
-      responses:
-        '200':
-          description: Order cancelled
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/OrderResponse'
-        '409':
-          description: Order can no longer be cancelled
           content:
             application/json:
               schema:
@@ -281,7 +239,7 @@ components:
 
     OrderSummary:
       type: object
-      required: [id, customerId, status, totalAmount, priority, createdAt]
+      required: [id, customerId, status, totalAmount, createdAt]
       properties:
         id:
           type: string
@@ -291,12 +249,8 @@ components:
           example: cust_1001
         status:
           type: string
-          enum: [pending, confirmed, on_hold, shipped, delivered, cancelled]
+          enum: [pending, confirmed, shipped, delivered, cancelled]
           example: confirmed
-        priority:
-          type: string
-          enum: [low, normal, high]
-          example: high
         totalAmount:
           type: number
           format: float
@@ -339,15 +293,11 @@ components:
 
     OrderCreateRequest:
       type: object
-      required: [customerId, priority, items]
+      required: [customerId, items]
       properties:
         customerId:
           type: string
           example: cust_1001
-        priority:
-          type: string
-          enum: [low, normal, high]
-          default: normal
         items:
           type: array
           minItems: 1
@@ -363,22 +313,8 @@ components:
       properties:
         status:
           type: string
-          enum: [pending, confirmed, on_hold, shipped, delivered, cancelled]
-        priority:
-          type: string
-          enum: [low, normal, high]
+          enum: [pending, confirmed, shipped, delivered, cancelled]
         notes:
-          type: string
-          maxLength: 500
-
-    CancelOrderRequest:
-      type: object
-      required: [reason]
-      properties:
-        reason:
-          type: string
-          enum: [customer_requested, payment_failed, fraud_suspected, inventory_unavailable]
-        comment:
           type: string
           maxLength: 500
 
